@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        .vis{
+            width: 100px;
+            height: 100px;
+            padding: 20px
+        }
+    </style>
+    <body>
+        </div>
+        <div id="container"></div>
+        <div id="container2"></div>
+    </body>
+    <script>
+        var getartist = async () => {
+                par = window.location.pathname.split('/')
+                var sth = await fetch('/api/artist_profile/' + par[2])
+                .then(response=>response.json())
+                if (sth.length===0){
+                    var h = document.createElement('h')
+                    var txt = document.createTextNode('ARTIST PROFILE DOES NOT EXIST')
+                    h.appendChild(txt)
+                    var cont = document.getElementById('container')
+                    cont.appendChild(h)
+                    return
+                }
+                var add
+                var link
+                console.log(sth)
+                if (sth[0]['image'] === null){
+                    link = '/api/artists/empty.jpg'
+                }
+                else{
+                    add = String(sth[0]['image'])
+                    link = '/api/artists/' + add
+                }
+                var p = document.createElement('p')
+                var txt = document.createTextNode('Artist bio: '+ sth[0]['bio'])
+                p.appendChild(txt)
+                console.log(link)
+                var para = document.createElement("img");
+                para.src = link
+                para.className = "vis"
+                var cont = document.getElementById('container')
+                cont.appendChild(para)
+                cont.appendChild(p)
+                
+            }
+        var getit = async () => {
+                par = window.location.pathname.split('/')
+
+                var sth = await fetch('/api/artist_works/' + par[2])
+                .then(response=>response.json())
+                var add
+                var link
+                console.log(sth)
+                for(i=0; i<sth.length; i++){
+                    add = String(sth[i]['filename'])
+                    link = '/api/content/' + add
+                    console.log(link)
+                    var para = document.createElement("img");
+                    para.src = link
+                    para.id = i;
+                    para.className = "vis"
+                    var cont = document.getElementById('container2')
+                    cont.appendChild(para)
+                }
+            }
+            getit()
+            getartist()
+    </script>
+</html>

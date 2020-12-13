@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        .vis{
+            width: 100px;
+            height: 100px;
+            padding: 20px
+        }
+    </style>
+    <body>
+        </div>
+        <div id="container"></div>
+        <div id="container2"></div>
+    </body>
+    <script>
+        var getartist = async () => {
+                var sth = await fetch('/api/artists')
+                .then(response=>response.json())
+                console.log(sth)
+                if (sth.length===0){
+                    var h = document.createElement('h')
+                    var txt = document.createTextNode('ARTISTS DO NOT EXIST YET')
+                    h.appendChild(txt)
+                    var cont = document.getElementById('container')
+                    cont.appendChild(h)
+                    return
+                }
+                for(i=0; i<sth.length; i++){
+                    var link = document.createElement('a')
+                    link.href = '/profile/' + sth[i]['name']
+                    var txt = document.createTextNode(sth[i]['name'])
+                    link.appendChild(txt)
+                    var cont = document.getElementById('container2')
+                    cont.appendChild(link)
+                }
+            }
+            getartist()
+    </script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        .vis{
+            width: 100px;
+            height: 100px;
+            padding: 20px
+        }
+    </style>
+    <body>
+        <div id="container2"></div>
+        <script>        
+            var getit = async () => {
+                var sth = await fetch('/api/data')
+                .then(response=>response.json())
+                var add
+                var link
+                console.log(sth)
+                for(i=0; i<sth.length; i++){
+                    add = String(sth[i]['filename'])
+                    link = '/api/content/' + add
+                    console.log(link)
+                    var para = document.createElement("img");
+                    para.src = link
+                    para.id = i;
+                    para.className = "vis"
+                    var p = document.createElement('p')
+                    var txt = document.createTextNode(sth[i]['artname'])
+                    var cont = document.getElementById('container2')
+                    var a = document.createElement('a')
+                    a.href = '/profile/' + sth[i]['artist']
+                    var txt2 = document.createTextNode(sth[i]['artist'])
+                    a.appendChild(txt2)
+                    p.appendChild(txt)
+                    cont.appendChild(para)
+                    cont.appendChild(p)
+                    cont.appendChild(a)   
+                }
+            }
+            getit()
+        </script>
+    </body>
+</html>

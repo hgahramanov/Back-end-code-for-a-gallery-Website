@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        .vis{
+            width: 100px;
+            height: 100px;
+            padding: 20px
+        }
+    </style>
+    <body>
+        <div>
+            <h1>Admin Panel</h1>
+            <form action="/admin" method="POST" enctype="multipart/form-data">
+                <input type="file" accept="image/*" name="visual"/>
+                <input type="text" placeholder="art name" name="artname" />
+                <input type="text" placeholder="Artist" name="artist" />
+                <TEXtarea name='description'></TEXtarea>
+                <input type="submit">
+            </form>
+        <a href="api/admin/logout">Logout</a>
+        </div>
+        <div id="container2"></div>
+        <h1>Artists</h1>
+        <div id="container3"></div>
+        <script>        
+            var getit = async () => {
+                var sth = await fetch('/api/data')
+                .then(response=>response.json())
+                console.log(sth)
+                var add
+                var link
+                for(i=0; i<sth.length; i++){
+                    add = String(sth[i]['filename'])
+                    link = '/api/content/' + add
+                    console.log(link)
+                    var para = document.createElement("img");
+                    var div = document.createElement("div")
+                    var para2 = document.createElement("input")
+                    var form = document.createElement("form")
+                    form.action = "/api/delete/" + String(sth[i]['id'])
+                    form.method = "GET"
+                    para2.type = 'submit'
+                    para2.className = "delButt"
+                    para2.value = "Delete"
+
+                    para.src = link
+                    para.id = i;
+                    para.className = "vis"
+                    form.appendChild(para2)
+                    div.appendChild(para)
+                    div.appendChild(form)
+                    var cont = document.getElementById('container2')
+                    cont.appendChild(div)
+                }
+            }
+
+            var getartists = async () => {
+                var sth = await fetch('/api/artists')
+                .then(response=>response.json())
+                console.log(sth)
+                var add
+                var link
+                for(i=0; i<sth.length; i++){
+                    var name = document.createElement('p')
+                    var txt = document.createTextNode(String(sth[i]['name']))
+                    var form = document.createElement('form')
+                    var sub = document.createElement('input')
+                    var img = document.createElement('input')
+                    var prof = document.createElement('img')
+                    if (sth[i]['image']) prof.src = '/api/artists/' + String(sth[i]['id']) + '.jpg'
+                    else prof.src = 'api/artists/empty.jpg'
+                    img.type = 'file'
+                    img.accept = 'image/*'
+                    img.name = 'visual'
+                    prof.className = 'vis'
+                    sub.type = 'submit'
+                    form.action = '/api/artists/' + String(sth[i]['id'])
+                    form.method = 'POST'
+                    form.enctype="multipart/form-data"
+                    name.appendChild(txt)
+                    console.log(sth[i]['name'])
+                    var bio = document.createElement('textarea')
+                    bio.value = sth[i]['bio']
+                    bio.className = 'bio'
+                    bio.name ='bio'
+                    bio.cols = 50
+                    bio.rows = 4
+                    form.appendChild(bio)
+                    form.appendChild(sub)
+                    form.appendChild(img)
+                    var cont = document.getElementById('container3')
+                    cont.appendChild(prof)
+                    cont.appendChild(name)
+                    cont.appendChild(form)
+                }
+            }
+            getit()
+            getartists()
+        </script>
+    </body>
+</html>
